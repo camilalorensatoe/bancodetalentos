@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banco de Talentos — Layoff Gran</title>
+<meta name="description" content="Hub de profissionais impactados pelo layoff do Gran, disponíveis para novas oportunidades. Filtre por área de interesse e modelo de trabalho.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --surface: #FFFFFF;
+    --ink: #1C1C21;
+    --ink-soft: #55555C;
+    --ink-mute: #8A8A92;
+    --accent: #B3134B;
+    --accent-deep: #8E0F3C;
+    --accent-tint: #F9EBF0;
+    --line: #E7E5E0;
+    --radius: 10px;
+    --font-display: 'Archivo', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- Header ---------- */
+  header {
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .header-inner {
+    padding: 56px 0 40px;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-size: clamp(30px, 5vw, 46px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+    max-width: 720px;
+  }
+  .lede {
+    margin-top: 16px;
+    max-width: 640px;
+    color: var(--ink-soft);
+    font-size: 16px;
+  }
+  .lede strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .lede-cta {
+    margin-top: 14px;
+    max-width: 640px;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .live-count {
+    margin-top: 26px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-mute);
+  }
+  .live-count strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* ---------- Filters ---------- */
+  .filters {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(250, 250, 247, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .filters-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    padding: 16px 0;
+  }
+  .search-box {
+    flex: 1 1 260px;
+    position: relative;
+  }
+  .search-box svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    stroke: var(--ink-mute);
+    pointer-events: none;
+  }
+  input[type="search"] {
+    width: 100%;
+    padding: 10px 14px 10px 36px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    font-family: var(--font-display);
+    font-size: 14px;
+    color: var(--ink);
+  }
+  input[type="search"]::placeholder { color: var(--ink-mute); }
+
+  select {
+    padding: 10px 36px 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2355555C' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
+    font-family: var(--font-display);
+    font-size: 14px;
+    color: var(--ink);
+    appearance: none;
+    cursor: pointer;
+    max-width: 280px;
+  }
+
+  .chip-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .dropdown { position: relative; }
+  .dropdown-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+  }
+  .dropdown-trigger:hover { border-color: var(--ink); }
+  .dropdown-trigger.has-value {
+    border-color: var(--ink);
+    font-weight: 600;
+  }
+  .dropdown-trigger .chevron {
+    width: 12px;
+    height: 12px;
+    stroke: var(--ink-mute);
+    flex-shrink: 0;
+    transition: transform 0.15s ease;
+  }
+  .dropdown-trigger[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+
+  .dropdown-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 30;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: max-content;
+    max-width: min(600px, 86vw);
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 12px 32px rgba(28, 28, 33, 0.1);
+  }
+  .dropdown-panel[hidden] { display: none; }
+
+  .segment-pill {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink-soft);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+  .segment-pill:hover { border-color: var(--ink); color: var(--ink); }
+  .segment-pill.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #fff;
+  }
+
+  @media (max-width: 760px) {
+    .dropdown-panel { left: 0; right: 0; width: auto; max-width: none; }
+  }
+  .chip-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-mute);
+  }
+  .chip {
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .chip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .clear-filters {
+    border: none;
+    background: none;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-mute);
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 8px 4px;
+    display: none;
+  }
+  .clear-filters.visible { display: inline-block; }
+  .clear-filters:hover { color: var(--accent); }
+
+  /* ---------- States ---------- */
+  .state {
+    padding: 80px 24px;
+    text-align: center;
+    color: var(--ink-mute);
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+  .state .spinner {
+    width: 28px;
+    height: 28px;
+    margin: 0 auto 16px;
+    border: 3px solid var(--line);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .state button {
+    margin-top: 16px;
+    padding: 10px 20px;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    background: none;
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .state button:hover { background: var(--accent-tint); }
+
+  /* ---------- Table ---------- */
+  main { padding: 32px 0 80px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  thead th {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+    text-align: left;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+    background: #FCFCFA;
+  }
+  tbody td {
+    padding: 18px 16px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: #FDFAF9; }
+
+  .t-name {
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+  }
+  .t-loc {
+    margin-top: 4px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-mute);
+  }
+  .linkedin-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--accent-tint);
+    color: var(--accent-deep);
+    font-family: var(--font-display);
+    font-size: 12.5px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+  .linkedin-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+  }
+  .linkedin-btn svg { width: 12px; height: 12px; stroke: currentColor; flex-shrink: 0; }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    padding: 3px 9px;
+    border-radius: 5px;
+    background: var(--accent-tint);
+    color: var(--accent-deep);
+    white-space: nowrap;
+  }
+  .tag.model {
+    background: #F1F1EE;
+    color: var(--ink-soft);
+  }
+  .t-desc {
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    max-width: 420px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .t-desc.expanded { -webkit-line-clamp: unset; }
+  .t-desc:empty { cursor: default; }
+  .t-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    white-space: nowrap;
+  }
+  .t-links a {
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .t-links svg { width: 13px; height: 13px; stroke: currentColor; flex-shrink: 0; }
+
+  /* ---------- Mobile: table -> cards ---------- */
+  @media (max-width: 760px) {
+    thead { display: none; }
+    table, tbody, tr, td { display: block; width: 100%; }
+    table { border: none; background: none; }
+    tbody tr {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      padding: 6px 0;
+    }
+    tbody tr:hover { background: var(--surface); }
+    tbody td { border-bottom: none; padding: 10px 18px; }
+    tbody td:first-child { padding-top: 16px; }
+    tbody td:last-child { padding-bottom: 16px; }
+    .t-desc { max-width: none; }
+    .t-links { flex-direction: row; gap: 18px; flex-wrap: wrap; }
+    .filters-inner { padding: 12px 0; }
+    .chip-label { display: none; }
+    .header-inner { padding: 40px 0 30px; }
+  }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 28px 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-mute);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <p class="eyebrow">Banco de Talentos · Layoff Gran</p>
+    <h1>Profissionais prontos para o próximo desafio!</h1>
+    <p class="lede">Este hub reúne pessoas impactadas pela reestruturação do Gran. Aqui temos talentos de <strong>Growth, Produto, CX, Engenharia, RH, Financeiro e mais</strong>, disponíveis para novas oportunidades.</p>
+    <p class="lede-cta">Filtre por área e modelo de trabalho e fale direto com os candidatos.</p>
+    <p class="live-count" id="liveCount"></p>
+  </div>
+</header>
+
+<div class="filters">
+  <div class="wrap filters-inner">
+    <div class="dropdown" id="segmentDropdown">
+      <button type="button" class="dropdown-trigger" id="segmentTrigger" aria-haspopup="listbox" aria-expanded="false">
+        <span id="segmentTriggerLabel">Segmento</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="dropdown-panel" id="segmentPanel" role="listbox" aria-label="Filtrar por segmento" hidden></div>
+    </div>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="search" id="searchInput" placeholder="Buscar por nome, área, skill ou cidade…" aria-label="Buscar talentos">
+    </div>
+    <select id="areaSelect" aria-label="Filtrar por área específica">
+      <option value="">Área específica</option>
+    </select>
+    <div class="chip-group" id="modelChips" role="group" aria-label="Filtrar por modelo de trabalho">
+      <span class="chip-label">Modelo de trabalho</span>
+    </div>
+    <button class="clear-filters" id="clearFilters">limpar filtros</button>
+  </div>
+</div>
+
+<main class="wrap">
+  <div id="content">
+    <div class="state" id="loadingState">
+      <div class="spinner" aria-hidden="true"></div>
+      Carregando talentos…
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">Dados atualizados em tempo real via Google Sheets · Curadoria da comunidade</div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var SHEET_ID = '1N-_m9Lp7FuTDsv9oias9_3gOLzYcmhr29J7KO6NWAjg';
+  var PUB_ID = '2PACX-1vQSAwN0oiB2MAolldiKAKdZjTV3tCYSsujoQfX2h8T5UOvCh9-73rM6ovbbpWb04bDZ_UnZqpdDckDo';
+  var GID = '279247179';
+  var SOURCES = [
+    'https://docs.google.com/spreadsheets/d/e/' + PUB_ID + '/pub?gid=' + GID + '&single=true&output=csv',
+    'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv&gid=' + GID,
+    'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/export?format=csv&gid=' + GID
+  ];
+
+  var state = {
+    people: [],
+    search: '',
+    area: '',
+    models: new Set(),
+    category: ''
+  };
+
+  /* ---------- Macro-category tag mapping ----------
+     Maps each recruiter-facing "segment" tag to the free-text keywords
+     that may appear in the "Áreas de interesse" column. Matching is
+     substring-based over normalized (lowercase, no-accent) text, so it
+     tolerates typos/variants already present in the sheet (e.g. "Sucess",
+     "Catalogo" without accent) without requiring any spreadsheet changes. */
+  var CATEGORY_MAP = {
+    'Tecnologia & Produto': ['engenharia de software', 'tech lead', 'ti', 'product design',
+      'ux/ui', 'ux research', 'ux', 'ui', 'consumidor', 'consumidores', 'pesquisa', 'pesquisas'],
+    'Gestão Operacional': ['financeiro', 'marketplace', 'e-commerce', 'ecommerce', 'key account',
+      'catalogo', 'operacional', 'operacao', 'operacoes'],
+    'Growth & Marketing': ['growth', 'crm', 'product marketing', 'marketing', 'midia', 'performance',
+      'afiliados', 'conteudo', 'copywriting', 'comunicacao', 'comunicacoes'],
+    'Customer Experience': ['customer experience', 'cx', 'customer success', 'customer sucess', 'cs',
+      'atendimento', 'suporte', 'onboarding', 'relacionamento'],
+    'Recursos Humanos': ['rh', 'atracao', 'selecao', 'business partner', 'employee experience',
+      't&d', 'treinamento e desenvolvimento', 'saude corporativa'],
+    'Gestão da Qualidade': ['qualidade', 'sgq', 'seguranca de alimentos', 'producao', 'appcc', 'bpf', 'iso 9001']
+  };
+
+  // Whole-word / whole-phrase matching: the keyword must be bounded by non
+  // alphanumeric characters (or string start/end) on both sides. This avoids
+  // false positives like "ui" matching inside "aquisição" while still
+  // catching the keyword wherever it appears as its own word or phrase.
+  function keywordMatch(hay, kw) {
+    var k = norm(kw);
+    if (!k) return false;
+    var escaped = k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    var re = new RegExp('(^|[^a-z0-9])' + escaped + '($|[^a-z0-9])');
+    return re.test(hay);
+  }
+
+  function personMatchesCategory(p, categoryName) {
+    var hay = norm([p.areas.join(' | '), p.desc, p.cidade, p.estado, p.modelos.join(' | ')].join(' | '));
+    return CATEGORY_MAP[categoryName].some(function (kw) { return keywordMatch(hay, kw); });
+  }
+
+  var $content = document.getElementById('content');
+  var $count = document.getElementById('liveCount');
+  var $search = document.getElementById('searchInput');
+  var $area = document.getElementById('areaSelect');
+  var $chips = document.getElementById('modelChips');
+  var $clear = document.getElementById('clearFilters');
+  var $segDropdown = document.getElementById('segmentDropdown');
+  var $segTrigger = document.getElementById('segmentTrigger');
+  var $segLabel = document.getElementById('segmentTriggerLabel');
+  var $segPanel = document.getElementById('segmentPanel');
+
+  /* ---------- CSV parser (handles quoted fields, commas, newlines) ---------- */
+  function parseCSV(text) {
+    var rows = [], row = [], field = '', inQuotes = false;
+    for (var i = 0; i < text.length; i++) {
+      var c = text[i];
+      if (inQuotes) {
+        if (c === '"') {
+          if (text[i + 1] === '"') { field += '"'; i++; }
+          else { inQuotes = false; }
+        } else { field += c; }
+      } else {
+        if (c === '"') { inQuotes = true; }
+        else if (c === ',') { row.push(field); field = ''; }
+        else if (c === '\n' || c === '\r') {
+          if (c === '\r' && text[i + 1] === '\n') i++;
+          row.push(field); field = '';
+          rows.push(row); row = [];
+        } else { field += c; }
+      }
+    }
+    if (field !== '' || row.length) { row.push(field); rows.push(row); }
+    return rows;
+  }
+
+  /* ---------- Normalization helpers ---------- */
+  function norm(s) {
+    return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+  function titleCase(s) {
+    s = s.trim();
+    return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : s;
+  }
+  function splitList(s) {
+    return (s || '').split(/[,;]/).map(function (x) { return x.trim(); }).filter(Boolean);
+  }
+  function isUrl(s) { return /^https?:\/\//i.test((s || '').trim()); }
+  function esc(s) {
+    var d = document.createElement('div');
+    d.textContent = s || '';
+    return d.innerHTML;
+  }
+
+  /* ---------- Data loading ---------- */
+  function load() {
+    showLoading();
+    window.__diag = [];
+    tryFetch(0);
+  }
+
+  function tryFetch(idx) {
+    if (idx >= SOURCES.length) { showError(); return; }
+    fetch(SOURCES[idx], { cache: 'no-store' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      })
+      .then(function (text) {
+        var people = extractPeople(parseCSV(text));
+        if (!people.length) throw new Error('cabeçalho "Nome" não encontrado no CSV');
+        state.people = people;
+        buildFilters();
+        render();
+      })
+      .catch(function (err) {
+        var msg = 'Fonte ' + (idx + 1) + ': ' + (err && err.message ? err.message : 'falha de rede/CORS');
+        window.__diag.push(msg);
+        console.warn('[BancoTalentos]', msg, SOURCES[idx]);
+        tryFetch(idx + 1);
+      });
+  }
+
+  function extractPeople(rows) {
+    // Find the header row (the one that starts with "Nome"), skipping merged title rows
+    var headerIdx = -1;
+    for (var i = 0; i < rows.length; i++) {
+      if (norm(rows[i][0]) === 'nome') { headerIdx = i; break; }
+    }
+    if (headerIdx === -1) return [];
+
+    var headers = rows[headerIdx].map(norm);
+    function col(fragment) {
+      for (var i = 0; i < headers.length; i++) {
+        if (headers[i].indexOf(fragment) !== -1) return i;
+      }
+      return -1;
+    }
+    var C = {
+      nome: col('nome'),
+      email: col('mail'),
+      areas: col('interesse'),
+      desc: col('descricao'),
+      modelo: col('modelo'),
+      cidade: col('cidade'),
+      estado: col('estado'),
+      linkedin: col('linkedin'),
+      cv: col('curriculo')
+    };
+
+    var people = [];
+    for (var r = headerIdx + 1; r < rows.length; r++) {
+      var row = rows[r];
+      var nome = (row[C.nome] || '').trim();
+      if (!nome) continue;
+      people.push({
+        nome: nome,
+        email: (row[C.email] || '').trim(),
+        areas: splitList(row[C.areas]),
+        desc: (row[C.desc] || '').trim(),
+        modelos: splitList(row[C.modelo]).map(titleCase),
+        cidade: (row[C.cidade] || '').trim(),
+        estado: (row[C.estado] || '').trim(),
+        linkedin: (row[C.linkedin] || '').trim(),
+        cv: (row[C.cv] || '').trim()
+      });
+    }
+    return people;
+  }
+
+  /* ---------- Filters ---------- */
+  function buildFilters() {
+    buildSegmentDropdown();
+
+    // Áreas: unique, sorted pt-BR
+    var areaSet = {};
+    state.people.forEach(function (p) {
+      p.areas.forEach(function (a) { areaSet[a] = true; });
+    });
+    var areas = Object.keys(areaSet).sort(function (a, b) {
+      return a.localeCompare(b, 'pt-BR');
+    });
+    $area.length = 1; // keep "Todas as áreas"
+    areas.forEach(function (a) {
+      var opt = document.createElement('option');
+      opt.value = a;
+      opt.textContent = a;
+      $area.appendChild(opt);
+    });
+
+    // Modelos: unique normalized chips
+    var modelSet = {};
+    state.people.forEach(function (p) {
+      p.modelos.forEach(function (m) { modelSet[m] = true; });
+    });
+    // Remove old chips (keep label)
+    Array.prototype.slice.call($chips.querySelectorAll('.chip')).forEach(function (el) { el.remove(); });
+    Object.keys(modelSet).sort().forEach(function (m) {
+      var btn = document.createElement('button');
+      btn.className = 'chip';
+      btn.type = 'button';
+      btn.textContent = m;
+      btn.setAttribute('aria-pressed', 'false');
+      btn.addEventListener('click', function () {
+        if (state.models.has(m)) { state.models.delete(m); btn.classList.remove('active'); btn.setAttribute('aria-pressed', 'false'); }
+        else { state.models.add(m); btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true'); }
+        render();
+      });
+      $chips.appendChild(btn);
+    });
+  }
+
+  /* ---------- Segment dropdown (single-select, "Todos" + categorias) ---------- */
+  function buildSegmentDropdown() {
+    $segPanel.innerHTML = '';
+
+    var allBtn = document.createElement('button');
+    allBtn.type = 'button';
+    allBtn.className = 'segment-pill' + (state.category === '' ? ' active' : '');
+    allBtn.setAttribute('role', 'option');
+    allBtn.setAttribute('aria-selected', state.category === '' ? 'true' : 'false');
+    allBtn.textContent = 'Todos';
+    allBtn.addEventListener('click', function () { selectCategory(''); });
+    $segPanel.appendChild(allBtn);
+
+    Object.keys(CATEGORY_MAP).forEach(function (cat) {
+      var hasMatch = state.people.some(function (p) { return personMatchesCategory(p, cat); });
+      if (!hasMatch) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'segment-pill' + (state.category === cat ? ' active' : '');
+      btn.setAttribute('role', 'option');
+      btn.setAttribute('aria-selected', state.category === cat ? 'true' : 'false');
+      btn.textContent = cat;
+      btn.addEventListener('click', function () { selectCategory(cat); });
+      $segPanel.appendChild(btn);
+    });
+  }
+
+  function selectCategory(cat) {
+    state.category = cat;
+    $segLabel.textContent = cat || 'Segmento';
+    $segTrigger.classList.toggle('has-value', !!cat);
+    buildSegmentDropdown();
+    closeSegmentPanel();
+    render();
+  }
+
+  function openSegmentPanel() {
+    $segPanel.hidden = false;
+    $segTrigger.setAttribute('aria-expanded', 'true');
+    document.addEventListener('click', onDocClickCloseSegment);
+  }
+  function closeSegmentPanel() {
+    $segPanel.hidden = true;
+    $segTrigger.setAttribute('aria-expanded', 'false');
+    document.removeEventListener('click', onDocClickCloseSegment);
+  }
+  function onDocClickCloseSegment(e) {
+    if (!$segDropdown.contains(e.target)) closeSegmentPanel();
+  }
+
+  $segTrigger.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if ($segPanel.hidden) openSegmentPanel(); else closeSegmentPanel();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeSegmentPanel();
+  });
+
+  function matches(p) {
+    if (state.category && !personMatchesCategory(p, state.category)) return false;
+    if (state.area && p.areas.indexOf(state.area) === -1) return false;
+    if (state.models.size) {
+      var ok = p.modelos.some(function (m) { return state.models.has(m); });
+      if (!ok) return false;
+    }
+    if (state.search) {
+      var hay = norm([p.nome, p.areas.join(' '), p.desc, p.cidade, p.estado, p.modelos.join(' ')].join(' '));
+      if (hay.indexOf(state.search) === -1) return false;
+    }
+    return true;
+  }
+
+  /* ---------- Rendering ---------- */
+  function render() {
+    var filtered = state.people.filter(matches);
+    var hasFilters = state.search || state.area || state.models.size || state.category;
+    $clear.classList.toggle('visible', !!hasFilters);
+
+    $count.innerHTML = '<strong>' + filtered.length + '</strong> de <strong>' +
+      state.people.length + '</strong> profissionais' + (hasFilters ? ' · filtros ativos' : ' disponíveis');
+
+    if (!filtered.length) {
+      $content.innerHTML = '<div class="state">Nenhum talento encontrado com esses filtros.<br>Tente ampliar a busca.</div>';
+      return;
+    }
+
+    var html = '<table><thead><tr>' +
+      '<th>Profissional</th><th>Áreas de interesse</th><th>Sobre</th><th>Modelo</th><th>Contato</th>' +
+      '</tr></thead><tbody>';
+
+    filtered.forEach(function (p) {
+      var loc = [p.cidade, p.estado].filter(Boolean).join(', ');
+      var links = [];
+      if (isUrl(p.cv)) {
+        links.push('<a href="' + esc(p.cv) + '" target="_blank" rel="noopener">' + docIcon() + 'Currículo</a>');
+      }
+      if (p.email) {
+        links.push('<a href="mailto:' + esc(p.email) + '">' + mailIcon() + 'E-mail</a>');
+      }
+      var linkedinBtn = isUrl(p.linkedin)
+        ? '<a class="linkedin-btn" href="' + esc(p.linkedin) + '" target="_blank" rel="noopener" aria-label="Ver perfil de ' + esc(p.nome) + ' no LinkedIn">' + linkIcon() + 'Ver no LinkedIn</a>'
+        : '';
+
+      html += '<tr>' +
+        '<td><div class="t-name">' + esc(p.nome) + '</div>' +
+        (loc ? '<div class="t-loc">' + esc(loc) + '</div>' : '') +
+        linkedinBtn + '</td>' +
+        '<td><div class="tags">' + p.areas.map(function (a) { return '<span class="tag">' + esc(a) + '</span>'; }).join('') + '</div></td>' +
+        '<td><div class="t-desc" title="Clique para expandir">' + esc(p.desc) + '</div></td>' +
+        '<td><div class="tags">' + p.modelos.map(function (m) { return '<span class="tag model">' + esc(m) + '</span>'; }).join('') + '</div></td>' +
+        '<td><div class="t-links">' + links.join('') + '</div></td>' +
+        '</tr>';
+    });
+
+    html += '</tbody></table>';
+    $content.innerHTML = html;
+
+    // Expand/collapse long descriptions
+    Array.prototype.slice.call($content.querySelectorAll('.t-desc')).forEach(function (el) {
+      el.addEventListener('click', function () { el.classList.toggle('expanded'); });
+    });
+  }
+
+  function showLoading() {
+    $content.innerHTML = '<div class="state"><div class="spinner" aria-hidden="true"></div>Carregando talentos…</div>';
+  }
+
+  function showError() {
+    var diag = (window.__diag || []).map(esc).join('<br>');
+    $content.innerHTML = '<div class="state">Não foi possível carregar os dados da planilha.<br>' +
+      'Verifique se a planilha está publicada na web e acessível.' +
+      (diag ? '<br><br><small style="opacity:0.7">' + diag + '</small>' : '') +
+      '<br><button id="retryBtn">Tentar novamente</button></div>';
+    document.getElementById('retryBtn').addEventListener('click', load);
+  }
+
+  /* ---------- Icons ---------- */
+  function linkIcon() { return '<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>'; }
+  function docIcon() { return '<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>'; }
+  function mailIcon() { return '<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>'; }
+
+  /* ---------- Events ---------- */
+  var debounce;
+  $search.addEventListener('input', function () {
+    clearTimeout(debounce);
+    debounce = setTimeout(function () {
+      state.search = norm($search.value.trim());
+      render();
+    }, 150);
+  });
+  $area.addEventListener('change', function () {
+    state.area = $area.value;
+    render();
+  });
+  $clear.addEventListener('click', function () {
+    state.search = ''; $search.value = '';
+    state.area = ''; $area.value = '';
+    state.models.clear();
+    Array.prototype.slice.call($chips.querySelectorAll('.chip')).forEach(function (el) {
+      el.classList.remove('active');
+      el.setAttribute('aria-pressed', 'false');
+    });
+    selectCategory('');
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>
